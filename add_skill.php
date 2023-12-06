@@ -1,8 +1,7 @@
 <?php
+ob_start();
+
 include 'includes/header.php';
-
-// session_start();
-
 if (!$user_bool) {
   header('location: index.php');
   exit;
@@ -20,7 +19,7 @@ if (isset($_SESSION['skill_name'])) {
 ?>
 <main>
   <section class="banner">
-    <form action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
+    <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
 
       <!-- التحقق مما اذا قام المستخدم بالقيام ببعض التعديلات في حقول الادخال -->
@@ -59,7 +58,7 @@ if (isset($_SESSION['skill_name'])) {
       <input class="btn btn-primary" type="submit" value="submit" />
 
     </form>
-    <form action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
+    <form id="form_cv" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
       <!-- التحقق مما اذا قام المستخدم بالقيام ببعض التعديلات في حقول الادخال -->
       <?php if (isset($_SESSION['input_false'])) : ?>
@@ -99,9 +98,91 @@ if (isset($_SESSION['skill_name'])) {
     }
   }
 </script>
+
 <?php
 include 'includes/footer.php';
 unset($_SESSION['skill_name']);
 unset($_SESSION['errors']);
 unset($_SESSION['input_false']);
 ?>
+<script>
+  let form_skill = document.getElementById('form_skill');
+  let form_cv = document.getElementById('form_cv');
+  let skill_name = document.getElementById('name');
+  let image = document.getElementById('image');
+  let cv = document.getElementById('cv');
+
+  form_skill.addEventListener('submit', function(e) {
+
+    e.preventDefault();
+
+    let file = image.files[0];
+
+    let formData = new FormData();
+
+    formData.append('image', file);
+    formData.append('skill_name', skill_name.value);
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'functions/users/add_skill.php', true);
+
+    xhr.send(formData);
+
+    xhr.onload = function() {
+
+      if (xhr.status == 200) {
+        console.log(xhr.response);
+      } else {
+        console.error(xhr.response);
+      }
+    }
+
+  });
+  form_cv.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let file = cv.files[0];
+
+    let data = new FormData();
+
+    data.append('cv', file);
+
+    let xml = new XMLHttpRequest();
+    xml.open('POST', 'functions/users/add_skill.php', true);
+    xml.send(data);
+    xml.onload = function () {
+      if (xml.status == 200 && xml.readyState == 4) {
+        console.log(xml.response);
+        data = JSON.parse(xml.response);
+
+        if (data.cv) {
+          console.log('test');
+        } else if (data.skill_name) {
+          console.log('name');
+        } else if (data.image) {
+          console.log('image');
+        } else if (data.input_false) {
+          console.log('image');
+        } else {
+          console.log('testing');
+        }
+
+      } else {
+        console.error(xml.response);
+      }
+    }
+  });
+
+  // function add_skill() {
+  //   console.log('hello');
+  // }
+
+  // function add_cv() {
+  //   console.log('cv');
+  // }
+</script>
+
+<?php
+
+ob_end_flush();
