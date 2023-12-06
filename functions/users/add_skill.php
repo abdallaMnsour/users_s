@@ -57,24 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
 
         $query = "INSERT INTO skills (skill_name, image, user_id) VALUES ('$skill_name', '$image', '$user_id')";
         mysqli_query($conn, $query);
+
       } catch (Exception $e) {
 
-        $_SESSION['errors']['sql'] = $e->getMessage();
-        header('location: ../../add_skill.php');
+        echo json_encode(['sql' => $e->getMessage()]);
         exit;
+
       }
 
       if ($image_bool) {
         move_uploaded_file($image_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $image);
       }
 
-      header('location: ../../add_skill.php');
-      exit;
     } else {
-      $_SESSION['errors'] = $errors_validate;
-      $_SESSION['skill_name'] = $skill_name;
-      header('location: ../../add_skill.php');
-      exit;
+      echo json_encode($errors_validate);
     }
   } else if (isset($_FILES['cv'])) {
 
@@ -100,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
         $errors_validate['cv'] = 'you\'r cv is too big';
       }
     } else {
-      $cv = 'no_cv';
+      $errors_validate['cv'] = 'you have to upload an cv';
     }
 
     if (empty($errors_validate)) {
@@ -111,8 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
         $query = "UPDATE users SET cv = '$cv' WHERE id = '$user_id'";
         mysqli_query($conn, $query);
       } catch (Exception $e) {
-        $_SESSION['errors']['sql'] = $e->getMessage();
-        header('location: ../../add_skill.php');
+        echo json_encode(['sql' => $e->getMessage()]);
         exit;
       }
 
@@ -120,17 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
         move_uploaded_file($cv_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $cv);
       }
 
-      header('location: ../../add_skill.php');
-      exit;
     } else {
-      $_SESSION['errors'] = $errors_validate;
-      header('location: ../../add_skill.php');
-      exit;
+      echo json_encode($errors_validate);
     }
   } else {
-    $_SESSION['input_false'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="contact.php">please contact us.</a>';
-    header('location: ../../add_skill.php');
-    exit;
+    echo json_encode(['input_false' => 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="contact.php">please contact us.</a>']);
   }
 } else {
   header('location: ../../');
