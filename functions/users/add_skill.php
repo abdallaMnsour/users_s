@@ -6,7 +6,7 @@ session_start();
 $errors_validate = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
-  if (isset($_POST['skill_name']) && isset($_FILES['image']) && isset($_FILES['cv'])) {
+  if (isset($_POST['skill_name']) && isset($_FILES['image'])) {
 
     $skill_name = htmlspecialchars($_POST['skill_name']);
 
@@ -43,6 +43,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       $errors_validate['image'] = 'you have to upload an image';
     }
 
+
+
+
+    if (empty($errors_validate)) {
+
+      $skill_name = addslashes($skill_name);
+
+      $user_id = $_SESSION['user_login']['id'];
+
+
+      try {
+
+        $query = "INSERT INTO skills (skill_name, image, user_id) VALUES ('$skill_name', '$image', '$user_id')";
+        mysqli_query($conn, $query);
+      } catch (Exception $e) {
+
+        $_SESSION['errors']['sql'] = $e->getMessage();
+        header('location: ../../add_skill.php');
+        exit;
+      }
+
+      if ($image_bool) {
+        move_uploaded_file($image_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $image);
+      }
+
+      header('location: ../../add_skill.php');
+      exit;
+    } else {
+      $_SESSION['errors'] = $errors_validate;
+      $_SESSION['skill_name'] = $skill_name;
+      header('location: ../../add_skill.php');
+      exit;
+    }
+  } else if (isset($_FILES['cv'])) {
+
     // cv validate
     $cv_name = $_FILES['cv']['name'];
     $cv_tmp = $_FILES['cv']['tmp_name'];
@@ -68,48 +103,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       $cv = 'no_cv';
     }
 
-
-
     if (empty($errors_validate)) {
 
-      if ($image_bool) {
-        move_uploaded_file($image_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $image);
+      $user_id = $_SESSION['user_login']['id'];
+
+      try {
+        $query = "UPDATE users SET cv = '$cv' WHERE id = '$user_id'";
+        mysqli_query($conn, $query);
+      } catch (Exception $e) {
+        $_SESSION['errors']['sql'] = $e->getMessage();
+        header('location: ../../add_skill.php');
+        exit;
       }
 
       if ($cv_bool) {
         move_uploaded_file($cv_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $cv);
       }
 
-      $skill_name = addslashes($skill_name);
-
-      $user_id = $_SESSION['user_login']['id'];
-
-
-      try {
-
-        $query = "INSERT INTO skills (skill_name, image, user_id) VALUES ('$skill_name', '$image', '$user_id')";
-        mysqli_query($conn, $query);
-
-        $query = "UPDATE users SET cv = '$cv' WHERE id = '$user_id'";
-        mysqli_query($conn, $query);
-
-      } catch (Exception $e) {
-
-        $_SESSION['errors']['sql'] = $e->getMessage();
-
-      }
-
       header('location: ../../add_skill.php');
       exit;
-
     } else {
       $_SESSION['errors'] = $errors_validate;
-      $_SESSION['skill_name'] = $skill_name;
       header('location: ../../add_skill.php');
       exit;
     }
   } else {
-    $_SESSION['input_false'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="../contact_us.php">please contact us.</a>';
+    $_SESSION['input_false'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="contact.php">please contact us.</a>';
     header('location: ../../add_skill.php');
     exit;
   }

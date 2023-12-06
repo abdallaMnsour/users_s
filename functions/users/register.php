@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // country validate
     $countries = json_decode(file_get_contents('../../js/countries.json'));
-    $errors_validate['country'] = 'The input field has been tampered with. Please try again, and if the problem persists, please <a href="../contact_us.php">contact us.</a>';
+    $errors_validate['country'] = 'The input field has been tampered with. Please try again, and if the problem persists, please <a href="contact.php">contact us.</a>';
     foreach ($countries as $value) {
       if ($country == $value->name) {
         unset($errors_validate['country']);
@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit;
     }
   } else {
-    $_SESSION['input_false'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="../contact_us.php">please contact us.</a>';
+    $_SESSION['input_false'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="contact.php">please contact us.</a>';
     header('location: ../../login/register.php');
     exit;
   }
