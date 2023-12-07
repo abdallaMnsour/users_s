@@ -1,5 +1,17 @@
 <?php
 include 'includes/header.php';
+
+require_once 'functions/connect.php';
+
+try {
+    $query = "SELECT * FROM skills WHERE user_id = '{$user['id']}'";
+    $query = mysqli_query($conn, $query);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+
+
 ?>
 <!-- main-area -->
 <main>
@@ -41,11 +53,12 @@ include 'includes/header.php';
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <ul class="about__icons__wrap">
-                        <li>
-                            <img class="light" src="assets/img/icons/xd_light.png" alt="XD">
-                            <img class="dark" src="assets/img/icons/xd.png" alt="XD">
-                        </li>
-                        <li>
+                        <?php while ($skill = mysqli_fetch_assoc($query)) : ?>
+                            <li>
+                                <img src="files_users/<?= $user['email'] ?>/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                            </li>
+                        <?php endwhile; ?>
+                        <!-- <li>
                             <img class="light" src="assets/img/icons/skeatch_light.png" alt="Skeatch">
                             <img class="dark" src="assets/img/icons/skeatch.png" alt="Skeatch">
                         </li>
@@ -68,7 +81,7 @@ include 'includes/header.php';
                         <li>
                             <img class="light" src="assets/img/icons/figma_light.png" alt="Figma">
                             <img class="dark" src="assets/img/icons/figma.png" alt="Figma">
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div class="col-lg-6">
@@ -86,7 +99,9 @@ include 'includes/header.php';
                             </div>
                         </div>
                         <p class="desc">I love to work in User Experience & User Interface designing. Because I love to solve the design problem and find easy and better solutions to solve it. I always try my best to make good user interface with the best user experience. I have been working as a UX Designer</p>
-                        <a href="about.php" class="btn">Download my resume</a>
+                        <?php if ($user_bool && $user['cv'] != 'no_cv') : ?>
+                            <a download href="files_users/<?= $user['email'] . '/' . $user['cv'] ?>" class="btn">Download my resume</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1073,11 +1088,16 @@ include 'includes/header.php';
                     </div>
                     <div class="col-lg-6">
                         <div class="homeContact__form">
-                            <form action="#">
-                                <input type="text" placeholder="Enter name*">
-                                <input type="email" placeholder="Enter mail*">
-                                <input type="number" placeholder="Enter number*">
-                                <textarea name="message" placeholder="Enter Massage*"></textarea>
+                            <form id="message_form" method="post">
+                                <div id="status_submit"></div>
+                                <input id="name_m" name="name" type="text" placeholder="Username*">
+                                <div id="name_input_error"></div>
+                                <input id="email_m" name="email" type="email" placeholder="E-mail*">
+                                <div id="email_input_error"></div>
+                                <input id="phone_m" name="phone" type="number" placeholder="Phone number*">
+                                <div id="phone_input_error"></div>
+                                <textarea id="message_m" name="message" placeholder="Enter Massage*"></textarea>
+                                <div id="message_input_error"></div>
                                 <button type="submit">Send Message</button>
                             </form>
                         </div>
@@ -1091,6 +1111,103 @@ include 'includes/header.php';
 </main>
 <!-- main-area-end -->
 
+<script>
+    let message_form = document.getElementById('message_form');
+
+    let status_submit = document.getElementById('status_submit');
+
+    let input_name = document.getElementById('name_m');
+    let input_email = document.getElementById('email_m');
+    let input_phone = document.getElementById('phone_m');
+    let input_message = document.getElementById('message_m');
+
+    let name_input_error = document.getElementById('name_input_error');
+    let email_input_error = document.getElementById('email_input_error');
+    let phone_input_error = document.getElementById('phone_input_error');
+    let message_input_error = document.getElementById('message_input_error');
+
+
+    message_form.onsubmit = function(e) {
+        e.preventDefault();
+        status_submit.innerHTML = '';
+
+        let data = new FormData();
+        data.append('name', input_name.value);
+        data.append('email', input_email.value);
+        data.append('phone', input_phone.value);
+        data.append('message', input_message.value);
+
+        // let data = {
+        //     name: input_name.value,
+        //     email: input_email.value,
+        //     phone: input_phone.value,
+        //     message: input_message.value
+        // }
+
+        // data = JSON.stringify(data);
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("POST", 'functions/admin/add_message.php');
+
+        xhr.send(data);
+
+        xhr.onload = function() {
+            if (xhr.status == 200 && xhr.readyState == 4) {
+                data = JSON.parse(xhr.response);
+                if (data.input_false) {
+                    status_submit.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>input error</strong><br>${data.input_false}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.sql) {
+                    status_submit.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>sql error</strong><br>${data.sql}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.success) {
+                    input_name.value = '';
+                    input_email.value = '';
+                    input_phone.value = '';
+                    input_message.value = '';
+
+                    status_submit.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>success</strong><br>${data.success}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.name) {
+                    name_input_error.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>name error</strong><br>${data.name}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.email) {
+                    email_input_error.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>email error</strong><br>${data.email}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.phone) {
+                    phone_input_error.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>phone error</strong><br>${data.phone}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+                if (data.message) {
+                    message_input_error.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>message error</strong><br>${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                }
+            } else {
+                console.error(xhr.response);
+            }
+        }
+    }
+</script>
 
 <?php
 include 'includes/footer.php';

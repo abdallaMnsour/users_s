@@ -22,33 +22,21 @@ if (isset($_SESSION['skill_name'])) {
     <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
 
-      <!-- التحقق مما اذا قام المستخدم بالقيام ببعض التعديلات في حقول الادخال -->
-      <?php if (isset($_SESSION['input_false'])) : ?>
-        <div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation"></i> <?= $_SESSION['input_false'] ?></div>
-      <?php endif; ?>
-
-      <!-- التحقق مما اذا كان هناك خطا في ال sql ام لا -->
-      <?php if (isset($_SESSION['errors']['sql'])) : ?>
-        <div class="alert alert-danger mb-5"><i class="fa-solid fa-triangle-exclamation"></i> you have an error in you'r sql<br><b>message :</b> <?= $_SESSION['errors']['sql'] ?> please <a href="mailto:a.mansour.code@gmail.com">contact with developer</a></div>
-      <?php endif; ?>
+      <span id="skill_status"></span>
 
       <div class="mb-3">
         <label for="name" class="form-label">skill name <span class="text-danger">*</span></label>
         <input type="text" name="skill_name" class="form-control" id="name" placeholder="skill name ..." value="<?= $name_skill ?>" />
       </div>
 
-      <?php if (isset($_SESSION['errors']['skill_name'])) : ?>
-        <div class="alert alert-danger"><?= $_SESSION['errors']['skill_name'] ?></div>
-      <?php endif; ?>
+      <div id="skill_name_errors"></div>
 
       <div class="mb-3">
         <label for="image" class="form-label">you'r image skill <span class="text-danger">*</span></label>
         <input class="form-control" type="file" id="image" name="image" />
       </div>
 
-      <?php if (isset($_SESSION['errors']['image'])) : ?>
-        <div class="alert alert-danger"><?= $_SESSION['errors']['image'] ?></div>
-      <?php endif; ?>
+      <div id="image_errors"></div>
 
       <!-- <div class="mb-3">
         <label for="customRange2" class="form-label d-flex justify-content-between"><span>Your experience <span class="text-danger">*</span></span><div id="rangeValue"></div></label>
@@ -60,15 +48,8 @@ if (isset($_SESSION['skill_name'])) {
     </form>
     <form id="form_cv" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
-      <!-- التحقق مما اذا قام المستخدم بالقيام ببعض التعديلات في حقول الادخال -->
-      <?php if (isset($_SESSION['input_false'])) : ?>
-        <div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation"></i> <?= $_SESSION['input_false'] ?></div>
-      <?php endif; ?>
 
-      <!-- التحقق مما اذا كان هناك خطا في ال sql ام لا -->
-      <?php if (isset($_SESSION['errors']['sql'])) : ?>
-        <div class="alert alert-danger mb-5"><i class="fa-solid fa-triangle-exclamation"></i> you have an error in you'r sql<br><b>message :</b> <?= $_SESSION['errors']['sql'] ?> please <a href="mailto:a.mansour.code@gmail.com">contact with developer</a></div>
-      <?php endif; ?>
+      <span id="cv_status"></span>
 
       <div class="mb-3">
         <label for="cv" class="form-label">select you'r cv</label>
@@ -76,9 +57,7 @@ if (isset($_SESSION['skill_name'])) {
         <p style="font-size: 14px;color: #db7474">Warning: If you select a new file, the old CV file will be deleted</p>
       </div>
 
-      <?php if (isset($_SESSION['errors']['cv'])) : ?>
-        <div class="alert alert-danger"><?= $_SESSION['errors']['cv'] ?></div>
-      <?php endif; ?>
+      <div id="cv_errors"></div>
 
       <!-- <div class="mb-3">
         <label for="customRange2" class="form-label d-flex justify-content-between"><span>Your experience <span class="text-danger">*</span></span><div id="rangeValue"></div></label>
@@ -108,9 +87,18 @@ unset($_SESSION['input_false']);
 <script>
   let form_skill = document.getElementById('form_skill');
   let form_cv = document.getElementById('form_cv');
+
   let skill_name = document.getElementById('name');
   let image = document.getElementById('image');
   let cv = document.getElementById('cv');
+
+  let cv_status = document.getElementById('cv_status');
+  let skill_status = document.getElementById('skill_status');
+
+  let skill_name_errors = document.getElementById('skill_name_errors');
+  let image_errors = document.getElementById('image_errors');
+  let cv_errors = document.getElementById('cv_errors');
+
 
   form_skill.addEventListener('submit', function(e) {
 
@@ -131,8 +119,54 @@ unset($_SESSION['input_false']);
 
     xhr.onload = function() {
 
-      if (xhr.status == 200) {
+      if (xhr.status == 200 && xhr.readyState == 4) {
+        skill_status.innerHTML = '';
+        skill_name_errors.innerHTML = '';
+        image_errors.innerHTML = '';
+
         console.log(xhr.response);
+        data = JSON.parse(xhr.response);
+        console.log(data);
+
+        if (data.skill_name) {
+          skill_name_errors.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>skill name error</strong><br>${data.skill_name}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.image) {
+          image_errors.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>image error</strong><br>${data.image}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.input_false) {
+          skill_status.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>input error</strong><br>${data.input_false}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.sql) {
+          skill_status.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>sql error</strong><br>${data.sql}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.success) {
+          skill_name.value = '';
+          image.value = '';
+
+          skill_status.innerHTML = `
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>success</strong><br>${data.success}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+
       } else {
         console.error(xhr.response);
       }
@@ -151,21 +185,42 @@ unset($_SESSION['input_false']);
     let xml = new XMLHttpRequest();
     xml.open('POST', 'functions/users/add_skill.php', true);
     xml.send(data);
-    xml.onload = function () {
+    xml.onload = function() {
       if (xml.status == 200 && xml.readyState == 4) {
+        cv_status.innerHTML = '';
+        cv_errors.innerHTML = '';
+
         console.log(xml.response);
         data = JSON.parse(xml.response);
 
         if (data.cv) {
-          console.log('test');
-        } else if (data.skill_name) {
-          console.log('name');
-        } else if (data.image) {
-          console.log('image');
-        } else if (data.input_false) {
-          console.log('image');
-        } else {
-          console.log('testing');
+          cv_errors.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>cv error</strong><br>${data.cv}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.input_false) {
+          cv_status.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>input error</strong><br>${data.input_false}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.sql) {
+          cv_status.innerHTML = `
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>sql error</strong><br>${data.sql}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
+        }
+        if (data.success) {
+          cv.value = '';
+          cv_status.innerHTML = `
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>success</strong><br>${data.success}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`;
         }
 
       } else {
