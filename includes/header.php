@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'functions/connect.php';
 $user_bool = false;
 $home_bool = false;
 $about_bool = false;
@@ -9,7 +10,8 @@ $our_blog_bool = false;
 $contact_me_bool = false;
 if (isset($_SESSION['user_login'])) {
   $user_bool = true;
-  $user = $_SESSION['user_login'];
+  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = '{$_SESSION['user_login']['id']}'");
+  $user = mysqli_fetch_assoc($query);
 }
 if (isset($_GET['page'])) {
   if ($_GET['page'] == 'home') {

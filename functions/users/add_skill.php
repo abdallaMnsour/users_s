@@ -6,10 +6,12 @@ session_start();
 $errors_validate = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
+
+  $user = $_SESSION['user_login'];
+
   if (isset($_POST['skill_name']) && isset($_FILES['image'])) {
-
     $skill_name = htmlspecialchars($_POST['skill_name']);
-
+    $skill_name = trim($skill_name);
     // skill name validate
     if ($skill_name == '') {
       $errors_validate['skill_name'] = 'Skill name cannot be empty.';
@@ -48,27 +50,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
 
     if (empty($errors_validate)) {
 
-      $skill_name = addslashes($skill_name);
-
-      $user_id = $_SESSION['user_login']['id'];
-
-
       try {
 
-        $query = "INSERT INTO skills (skill_name, image, user_id) VALUES ('$skill_name', '$image', '$user_id')";
+        $query = "INSERT INTO skills (skill_name, image, user_id) VALUES ('$skill_name', '$image', '{$user['id']}')";
         mysqli_query($conn, $query);
-
       } catch (Exception $e) {
 
         echo json_encode(['sql' => $e->getMessage()]);
         exit;
-
       }
 
       if ($image_bool) {
-        move_uploaded_file($image_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $image);
+        move_uploaded_file($image_tmp, '../../files_users/' . $user['email'] . '/' . $image);
       }
-
+      echo json_encode(['success' => 'skill added successfully']);
     } else {
       echo json_encode($errors_validate);
     }
@@ -101,10 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
 
     if (empty($errors_validate)) {
 
-      $user_id = $_SESSION['user_login']['id'];
+      if ($user['cv'] != 'no_cv') {
+        unlink('../../files_users/' . $user['email'] . '/' . $user['cv']);
+      }
 
       try {
-        $query = "UPDATE users SET cv = '$cv' WHERE id = '$user_id'";
+        $query = "UPDATE users SET cv = '$cv' WHERE id = '{$user['id']}'";
         mysqli_query($conn, $query);
       } catch (Exception $e) {
         echo json_encode(['sql' => $e->getMessage()]);
@@ -112,9 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       }
 
       if ($cv_bool) {
-        move_uploaded_file($cv_tmp, '../../files_users/' . $_SESSION['user_login']['email'] . '/' . $cv);
+        move_uploaded_file($cv_tmp, '../../files_users/' . $user['email'] . '/' . $cv);
       }
-
+      $_SESSION['user_login']['cv'] = $cv;
+      echo json_encode(['success' => 'cv added successfully']);
     } else {
       echo json_encode($errors_validate);
     }
