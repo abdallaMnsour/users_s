@@ -3,11 +3,13 @@ include 'includes/header.php';
 
 require_once 'functions/connect.php';
 
-try {
-    $query = "SELECT * FROM skills WHERE user_id = '{$user['id']}'";
-    $query = mysqli_query($conn, $query);
-} catch (Exception $e) {
-    echo $e->getMessage();
+if ($user_bool) {
+    try {
+        $query = "SELECT * FROM skills WHERE user_id = '{$user['id']}'";
+        $query = mysqli_query($conn, $query);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
 }
 
 
@@ -53,35 +55,41 @@ try {
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <ul class="about__icons__wrap">
-                        <?php while ($skill = mysqli_fetch_assoc($query)) : ?>
+                        <?php
+                        if ($user_bool) :
+                            while ($skill = mysqli_fetch_assoc($query)) : ?>
+                                <li>
+                                    <img src="files_users/<?= $user['email'] ?>/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                                </li>
+                            <?php
+                            endwhile;
+                        else :
+                            ?>
                             <li>
-                                <img src="files_users/<?= $user['email'] ?>/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                                <img class="light" src="assets/img/icons/skeatch_light.png" alt="Skeatch">
+                                <img class="dark" src="assets/img/icons/skeatch.png" alt="Skeatch">
                             </li>
-                        <?php endwhile; ?>
-                        <!-- <li>
-                            <img class="light" src="assets/img/icons/skeatch_light.png" alt="Skeatch">
-                            <img class="dark" src="assets/img/icons/skeatch.png" alt="Skeatch">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/illustrator_light.png" alt="Illustrator">
-                            <img class="dark" src="assets/img/icons/illustrator.png" alt="Illustrator">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/hotjar_light.png" alt="Hotjar">
-                            <img class="dark" src="assets/img/icons/hotjar.png" alt="Hotjar">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/invision_light.png" alt="Invision">
-                            <img class="dark" src="assets/img/icons/invision.png" alt="Invision">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/photoshop_light.png" alt="Photoshop">
-                            <img class="dark" src="assets/img/icons/photoshop.png" alt="Photoshop">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/figma_light.png" alt="Figma">
-                            <img class="dark" src="assets/img/icons/figma.png" alt="Figma">
-                        </li> -->
+                            <li>
+                                <img class="light" src="assets/img/icons/illustrator_light.png" alt="Illustrator">
+                                <img class="dark" src="assets/img/icons/illustrator.png" alt="Illustrator">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/hotjar_light.png" alt="Hotjar">
+                                <img class="dark" src="assets/img/icons/hotjar.png" alt="Hotjar">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/invision_light.png" alt="Invision">
+                                <img class="dark" src="assets/img/icons/invision.png" alt="Invision">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/photoshop_light.png" alt="Photoshop">
+                                <img class="dark" src="assets/img/icons/photoshop.png" alt="Photoshop">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/figma_light.png" alt="Figma">
+                                <img class="dark" src="assets/img/icons/figma.png" alt="Figma">
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="col-lg-6">
