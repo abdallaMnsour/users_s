@@ -103,7 +103,7 @@ if (isset($_GET['page'])) {
                 </div>
                 <?php if ($user_bool) : ?>
                   <div class="header__btn d-none d-md-block">
-                    <a href="add_skill.php" class="btn">add skill</a>
+                    <a href="account.php" class="btn">account</a>
                     <a href="login/logout.php" class="btn">logout</a>
                   </div>
                 <?php else : ?>

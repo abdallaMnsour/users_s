@@ -17,7 +17,43 @@ if (isset($_SESSION['skill_name'])) {
   $name_skill = '';
 }
 ?>
+<style>
+  section.account {
+    max-width: 400px;
+    margin: 150px auto 0 auto;
+  }
+
+  section.account div img {
+    width: 120px;
+    height: 120px;
+    box-shadow: 3px 2px 8px 4px #c3c3c3;
+  }
+
+  hr:not([size]) {
+    height: 2px;
+    background: #898989;
+  }
+</style>
 <main>
+  <section class="account">
+    <div>
+      <img src="img/users/<?= $user['image'] ?>" />
+    </div>
+    <hr>
+    <div>
+      <p><b>Name :</b> <?= $user['username'] ?></p>
+      <p><b>Email :</b> <?= $user['email'] ?></p>
+      <p><b>Address 1 :</b> <?= $user['address_1'] ?></p>
+      <p><b>Address 2 :</b> <?= $user['address_2'] ?></p>
+      <p><b>Gender :</b> <?= $user['gender'] == 0 ? 'male' : 'female' ?></p>
+      <p><b>Country :</b> <?= $user['country'] ?></p>
+      <p><b>County :</b> <?= $user['county'] ?></p>
+      <p><b>City :</b> <?= $user['city'] ?></p>
+    </div><hr>
+    <div>
+      <a class="btn btn-primary" href="update_account.php">Edit you'r account</a>
+    </div>
+  </section>
   <section class="banner">
     <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 

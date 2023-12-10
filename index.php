@@ -12,8 +12,6 @@ if ($user_bool) {
     }
 }
 
-
-
 ?>
 <!-- main-area -->
 <main>
