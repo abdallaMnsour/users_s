@@ -57,7 +57,7 @@ if ($user_bool) {
                         if ($user_bool) :
                             while ($skill = mysqli_fetch_assoc($query)) : ?>
                                 <li>
-                                    <img src="files_users/<?= $user['email'] ?>/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                                    <img src="files_users/<?= $user['email'] ?>/skills/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
                                 </li>
                             <?php
                             endwhile;
@@ -106,7 +106,7 @@ if ($user_bool) {
                         </div>
                         <p class="desc">I love to work in User Experience & User Interface designing. Because I love to solve the design problem and find easy and better solutions to solve it. I always try my best to make good user interface with the best user experience. I have been working as a UX Designer</p>
                         <?php if ($user_bool && $user['cv'] != 'no_cv') : ?>
-                            <a download href="files_users/<?= $user['email'] . '/' . $user['cv'] ?>" class="btn">Download my resume</a>
+                            <a download href="files_users/<?= $user['email'] . '/cv/' . $user['cv'] ?>" class="btn">Download my resume</a>
                         <?php endif; ?>
                     </div>
                 </div>

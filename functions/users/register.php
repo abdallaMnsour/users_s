@@ -221,6 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         move_uploaded_file($image_tmp, '../../img/users/' . $image);
       }
       mkdir('../../files_users/' . $email);
+      mkdir('../../files_users/' . $email . '/services');
+      mkdir('../../files_users/' . $email . '/skills');
+      mkdir('../../files_users/' . $email . '/cv');
       session_unset();
       $query = "SELECT * FROM users WHERE email = '$email'";
       $query = mysqli_query($conn, $query);

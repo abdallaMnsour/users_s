@@ -20,7 +20,7 @@ if (isset($_SESSION['skill_name'])) {
 <style>
   section.account {
     max-width: 400px;
-    margin: 150px auto 0 auto;
+    margin: 150px auto 0;
   }
 
   section.account div img {
@@ -54,7 +54,7 @@ if (isset($_SESSION['skill_name'])) {
       <a class="btn btn-primary" href="update_account.php">Edit you'r account</a>
     </div>
   </section>
-  <section class="banner">
+  <section class="banner pt-0">
     <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
 
@@ -79,7 +79,7 @@ if (isset($_SESSION['skill_name'])) {
         <input type="range" name="range" class="form-range" min="0" max="100" id="customRange2" onclick="updateValue(this)">
       </div> -->
 
-      <input class="btn btn-primary" type="submit" value="submit" />
+      <button class="btn btn-primary" type="submit">add skill</button>
 
     </form>
     <form id="form_cv" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
@@ -100,9 +100,12 @@ if (isset($_SESSION['skill_name'])) {
         <input type="range" name="range" class="form-range" min="0" max="100" id="customRange2" onclick="updateValue(this)">
       </div> -->
 
-      <input class="btn btn-primary" type="submit" value="new cv" />
+      <button class="btn btn-primary" type="submit">new cv</button>
 
     </form>
+  </section>
+  <section class="account mb-5 text-center">
+    <a href="management_services.php" class="btn btn-primary">edit services</a>
   </section>
 </main>
 <script>
