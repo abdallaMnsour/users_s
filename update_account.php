@@ -60,7 +60,7 @@ if (isset($_SESSION['user_login'])) {
           <div class="p-3">
             <form class="form-horizontal mt-3" action="functions/users/edit_account_user.php" method="post" enctype="multipart/form-data">
               <!-- التحقق مما اذا قام المستخدم بالقيام ببعض التعديلات في حقول الادخال -->
-              <?php if (isset($_SESSION['input_false_admin_update'])) : ?>
+              <?php if (isset($_SESSION['input_false_user_update'])) : ?>
                 <div class="alert alert-danger mb-5"><i class="fa-solid fa-triangle-exclamation"></i> <?= $_SESSION['input_false'] ?></div>
               <?php endif; ?>
 
@@ -209,6 +209,6 @@ if (isset($_SESSION['user_login'])) {
 
 <?php
 include 'includes/footer.php';
-$_SESSION['input_false_admin_update'] = null;
+$_SESSION['input_false_user_update'] = null;
 $_SESSION['errors_update'] = null;
 ob_end_flush();

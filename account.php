@@ -37,7 +37,7 @@ if (isset($_SESSION['skill_name'])) {
 <main>
   <section class="account">
     <div>
-      <img src="img/users/<?= $user['image'] ?>" />
+      <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" />
     </div>
     <hr>
     <div>
@@ -49,7 +49,8 @@ if (isset($_SESSION['skill_name'])) {
       <p><b>Country :</b> <?= $user['country'] ?></p>
       <p><b>County :</b> <?= $user['county'] ?></p>
       <p><b>City :</b> <?= $user['city'] ?></p>
-    </div><hr>
+    </div>
+    <hr>
     <div>
       <a class="btn btn-primary" href="update_account.php">Edit you'r account</a>
     </div>

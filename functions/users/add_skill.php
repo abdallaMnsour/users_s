@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       }
 
       if ($image_bool) {
-        move_uploaded_file($image_tmp, '../../files_users/' . $user['email'] . '/' . $image);
+        move_uploaded_file($image_tmp, '../../files_users/' . $user['email'] . '/skills/' . $image);
       }
       echo json_encode(['success' => 'skill added successfully']);
     } else {
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
     if (empty($errors_validate)) {
 
       if ($user['cv'] != 'no_cv') {
-        unlink('../../files_users/' . $user['email'] . '/' . $user['cv']);
+        unlink('../../files_users/' . $user['email'] . '/cv/' . $user['cv']);
       }
 
       try {
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       }
 
       if ($cv_bool) {
-        move_uploaded_file($cv_tmp, '../../files_users/' . $user['email'] . '/' . $cv);
+        move_uploaded_file($cv_tmp, '../../files_users/' . $user['email'] . '/cv/' . $cv);
       }
       $_SESSION['user_login']['cv'] = $cv;
       echo json_encode(['success' => 'cv added successfully']);

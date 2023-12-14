@@ -7,8 +7,6 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
 
-  $user = $_SESSION['user_login'];
-
   if (
     isset($_POST['username']) &&
     isset($_POST['email']) &&
@@ -23,6 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
   ) {
 
     require_once '../connect.php';
+    $user = mysqli_query($conn, "SELECT * FROM users WHERE id = '{$_SESSION['user_login']['id']}'");
+    $user = mysqli_fetch_assoc($user);
     $errors_validate = [];
     $empty_errors = [];
     $num_error = 0;
@@ -195,10 +195,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       if ($image_bool) {
         // قم بحذف الصوره القديمه اذا لم يكن اسمها default.png لانه لا يجب ان يتم حذف الصوره القديمه
         if ($user['image'] != 'default.png') {
-          unlink('../../img/users/' . $user['image']);
+          unlink('../../files_users/' . $user['email'] . '/user_image/' . $user['image']);
         }
-        move_uploaded_file($image_tmp, '../../img/users/' . $image);
+        move_uploaded_file($image_tmp, '../../files_users/' . $user['email'] . '/user_image/' . $image);
       }
+      if ($user['email'] != $email) {
+        rename('../../files_users/' . $user['email'], '../../files_users/' . $email);
+      }
+      move_uploaded_file($image_tmp, '../../files_users/' . $user['email'] . '/user_image/' . $image);
 
       header('location: ../../account.php');
       exit;
@@ -208,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       exit;
     }
   } else {
-    $_SESSION['input_false_admin_update'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="../contact_us.php">please contact us.</a>';
+    $_SESSION['input_false_user_update'] = 'The input fields have been manipulated, please try reloading the page.<br>If the problem persists, <a href="../contact_us.php">please contact us.</a>';
     header('location: ../../update_account.php');
     exit;
   }
