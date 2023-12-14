@@ -1,6 +1,7 @@
 <?php
 session_start();
-function clear ($value) {
+function clear($value)
+{
   $value = htmlspecialchars($value);
   $value = trim($value);
   return $value;
@@ -17,13 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($query = mysqli_query($conn, $query)) {
 
     if ($query->num_rows == 1) {
-      $_SESSION['user_login'] = mysqli_fetch_assoc($query);
+      $user = mysqli_fetch_assoc($query);
+      $_SESSION['user_login'] = $user;
+      if (isset($_COOKIE['user_login_id'])) {
+        if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+          setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+        } else {
+          setcookie('user_login_id', '', time() - 3600, '/');
+        }
+      } else if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+          setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+      }
       header('location: ../../');
     } else {
       header('location: ../../login/login.php?no_user=' . $email);
     }
   }
-
 } else {
   header('location: ../../');
   exit;

@@ -29,7 +29,11 @@ if ($user_bool) {
                 <div class="col-lg-6 order-0 order-lg-2">
                     <div class="banner__img text-center text-xxl-end">
                         <?php if ($user_bool) : ?>
-                            <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" alt="user_image">
+                            <?php if ($user['image'] != 'default.png') : ?>
+                                <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" alt="user_image">
+                            <?php else : ?>
+                                <img src="img/users/default.png" alt="user_image">
+                            <?php endif; ?>
                         <?php else : ?>
                             <img src="assets/img/banner/banner_img.png" alt="">
                         <?php endif; ?>

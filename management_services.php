@@ -29,7 +29,7 @@ try {
         are you sour you want delete this service ?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn bg-secondary" data-bs-dismiss="modal">Close</button>
         <button id="remove_serv" type="button" class="btn bg-danger" data-service="" onclick="remove_service(this)">Delete</button>
       </div>
     </div>
@@ -55,7 +55,7 @@ try {
           <tr id="row_<?= $service['id'] ?>">
             <th><?= $service['id'] ?></th>
             <th>
-              <img width="50" src="files_users/<?= $user['email'] ?>/services/<?= $service['image'] ?>" alt="image_service" />
+              <img width="50" src="files_users/<?= $user['email'] ?>/services/<?= $service['image'] ?>" alt="image_service" data-name="<?= $service['image'] ?>" />
             </th>
             <th><?= $service['service_name'] ?></th>
             <th><?= $service['description'] ?></th>
@@ -85,8 +85,10 @@ try {
   function remove_service(element) {
     let modal = document.querySelector('.modal-backdrop.fade.show');
     let row = document.querySelector(`tr#row_${element.dataset.service}`);
+    let img = document.querySelector(`tr#row_${element.dataset.service} th img`);
     let data = new FormData();
     data.append('service_id', element.dataset.service);
+    data.append('image', img.dataset.name);
 
 
     let xhr = new XMLHttpRequest();
@@ -98,7 +100,11 @@ try {
           row.style.display = 'none';
           close.style.display = 'none';
           modal.style.display = 'none';
-        } else {}
+        } else {
+          console.error(xhr.response);
+        }
+      } else {
+        console.error(xhr.response);
       }
     }
   }

@@ -37,7 +37,11 @@ if (isset($_SESSION['skill_name'])) {
 <main>
   <section class="account">
     <div>
-      <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" />
+      <?php if ($user['image'] != 'default.png') : ?>
+        <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" />
+      <?php else : ?>
+        <img src="img/users/default.png" />
+      <?php endif; ?>
     </div>
     <hr>
     <div>

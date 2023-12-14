@@ -235,6 +235,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user[$key] = stripslashes($value);
       }
       $_SESSION['user_login'] = $user;
+      // القديم id اذا لم يقم المستخدم بالتحديد فيجب إزاله ال
+      if (isset($_COOKIE['user_login_id'])) {
+        if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+          setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+        } else {
+          setcookie('user_login_id', '', time() - 3600, '/');
+        }
+      } else if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+        setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+      }
       header('location: ../../');
       exit;
     } else {
