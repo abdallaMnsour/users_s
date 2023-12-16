@@ -15,8 +15,6 @@ function clear($value)
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-  $user = $_SESSION['user_login'];
-
   if (
     isset($_POST['name']) &&
     isset($_POST['email']) &&
