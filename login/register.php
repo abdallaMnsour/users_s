@@ -168,8 +168,8 @@ if (isset($_SESSION['person'])) {
 
 						<div class="mb-3 d-flex align-items-center">
 							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="cb1">
-								<label class="custom-control-label" for="cb1">I agree all terms & conditions</label>
+								<input type="checkbox" class="custom-control-input" id="cb1" name="remember" value="yes">
+								<label class="custom-control-label" for="cb1">remember me</label>
 							</div>
 						</div>
 

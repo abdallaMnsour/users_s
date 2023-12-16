@@ -217,10 +217,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
       }
 
-      if ($image_bool) {
-        move_uploaded_file($image_tmp, '../../img/users/' . $image);
-      }
       mkdir('../../files_users/' . $email);
+      mkdir('../../files_users/' . $email . '/services');
+      mkdir('../../files_users/' . $email . '/skills');
+      mkdir('../../files_users/' . $email . '/cv');
+      mkdir('../../files_users/' . $email . '/user_image');
+
+      if ($image_bool) {
+        move_uploaded_file($image_tmp, '../../files_users/' . $email . '/user_image/' . $image);
+      }
+
       session_unset();
       $query = "SELECT * FROM users WHERE email = '$email'";
       $query = mysqli_query($conn, $query);
@@ -229,6 +235,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user[$key] = stripslashes($value);
       }
       $_SESSION['user_login'] = $user;
+      // القديم id اذا لم يقم المستخدم بالتحديد فيجب إزاله ال
+      if (isset($_COOKIE['user_login_id'])) {
+        if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+          setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+        } else {
+          setcookie('user_login_id', '', time() - 3600, '/');
+        }
+      } else if (isset($_POST['remember']) && $_POST['remember'] == 'yes') {
+        setcookie('user_login_id', $user['id'], time() + (60 * 60 * 24 * 30 * 6), '/');
+      }
       header('location: ../../');
       exit;
     } else {

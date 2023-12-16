@@ -8,7 +8,14 @@ $services_bool = false;
 $portfolio_bool = false;
 $our_blog_bool = false;
 $contact_me_bool = false;
-if (isset($_SESSION['user_login'])) {
+
+if (isset($_COOKIE['user_login_id'])) {
+  $user_bool = true;
+  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = '{$_COOKIE['user_login_id']}'");
+
+  $_SESSION['user_login'] = mysqli_fetch_assoc($query);
+  $user = $_SESSION['user_login'];
+} else if (isset($_SESSION['user_login'])) {
   $user_bool = true;
   $query = mysqli_query($conn, "SELECT * FROM users WHERE id = '{$_SESSION['user_login']['id']}'");
   $user = mysqli_fetch_assoc($query);
@@ -103,7 +110,7 @@ if (isset($_GET['page'])) {
                 </div>
                 <?php if ($user_bool) : ?>
                   <div class="header__btn d-none d-md-block">
-                    <a href="add_skill.php" class="btn">add skill</a>
+                    <a href="account.php" class="btn">account</a>
                     <a href="login/logout.php" class="btn">logout</a>
                   </div>
                 <?php else : ?>

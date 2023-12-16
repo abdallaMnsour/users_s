@@ -3,14 +3,20 @@ include 'includes/header.php';
 
 require_once 'functions/connect.php';
 
-try {
-    $query = "SELECT * FROM skills WHERE user_id = '{$user['id']}'";
-    $query = mysqli_query($conn, $query);
-} catch (Exception $e) {
-    echo $e->getMessage();
+if ($user_bool) {
+    try {
+        $query = "SELECT * FROM skills WHERE user_id = '{$user['id']}'";
+        $query = mysqli_query($conn, $query);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+    try {
+        $q_service = "SELECT * FROM services WHERE user_id = '{$user['id']}'";
+        $q_service = mysqli_query($conn, $q_service);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
 }
-
-
 
 ?>
 <!-- main-area -->
@@ -23,7 +29,11 @@ try {
                 <div class="col-lg-6 order-0 order-lg-2">
                     <div class="banner__img text-center text-xxl-end">
                         <?php if ($user_bool) : ?>
-                            <img src="img/users/<?= $user['image'] ?>" alt="">
+                            <?php if ($user['image'] != 'default.png') : ?>
+                                <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" alt="user_image">
+                            <?php else : ?>
+                                <img src="img/users/default.png" alt="user_image">
+                            <?php endif; ?>
                         <?php else : ?>
                             <img src="assets/img/banner/banner_img.png" alt="">
                         <?php endif; ?>
@@ -53,35 +63,41 @@ try {
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <ul class="about__icons__wrap">
-                        <?php while ($skill = mysqli_fetch_assoc($query)) : ?>
+                        <?php
+                        if ($user_bool) :
+                            while ($skill = mysqli_fetch_assoc($query)) : ?>
+                                <li>
+                                    <img src="files_users/<?= $user['email'] ?>/skills/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                                </li>
+                            <?php
+                            endwhile;
+                        else :
+                            ?>
                             <li>
-                                <img src="files_users/<?= $user['email'] ?>/<?= $skill['image'] ?>" alt="<?= $skill['skill_name'] ?>">
+                                <img class="light" src="assets/img/icons/skeatch_light.png" alt="Skeatch">
+                                <img class="dark" src="assets/img/icons/skeatch.png" alt="Skeatch">
                             </li>
-                        <?php endwhile; ?>
-                        <!-- <li>
-                            <img class="light" src="assets/img/icons/skeatch_light.png" alt="Skeatch">
-                            <img class="dark" src="assets/img/icons/skeatch.png" alt="Skeatch">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/illustrator_light.png" alt="Illustrator">
-                            <img class="dark" src="assets/img/icons/illustrator.png" alt="Illustrator">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/hotjar_light.png" alt="Hotjar">
-                            <img class="dark" src="assets/img/icons/hotjar.png" alt="Hotjar">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/invision_light.png" alt="Invision">
-                            <img class="dark" src="assets/img/icons/invision.png" alt="Invision">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/photoshop_light.png" alt="Photoshop">
-                            <img class="dark" src="assets/img/icons/photoshop.png" alt="Photoshop">
-                        </li>
-                        <li>
-                            <img class="light" src="assets/img/icons/figma_light.png" alt="Figma">
-                            <img class="dark" src="assets/img/icons/figma.png" alt="Figma">
-                        </li> -->
+                            <li>
+                                <img class="light" src="assets/img/icons/illustrator_light.png" alt="Illustrator">
+                                <img class="dark" src="assets/img/icons/illustrator.png" alt="Illustrator">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/hotjar_light.png" alt="Hotjar">
+                                <img class="dark" src="assets/img/icons/hotjar.png" alt="Hotjar">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/invision_light.png" alt="Invision">
+                                <img class="dark" src="assets/img/icons/invision.png" alt="Invision">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/photoshop_light.png" alt="Photoshop">
+                                <img class="dark" src="assets/img/icons/photoshop.png" alt="Photoshop">
+                            </li>
+                            <li>
+                                <img class="light" src="assets/img/icons/figma_light.png" alt="Figma">
+                                <img class="dark" src="assets/img/icons/figma.png" alt="Figma">
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="col-lg-6">
@@ -100,7 +116,7 @@ try {
                         </div>
                         <p class="desc">I love to work in User Experience & User Interface designing. Because I love to solve the design problem and find easy and better solutions to solve it. I always try my best to make good user interface with the best user experience. I have been working as a UX Designer</p>
                         <?php if ($user_bool && $user['cv'] != 'no_cv') : ?>
-                            <a download href="files_users/<?= $user['email'] . '/' . $user['cv'] ?>" class="btn">Download my resume</a>
+                            <a download href="files_users/<?= $user['email'] . '/cv/' . $user['cv'] ?>" class="btn">Download my resume</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -109,138 +125,55 @@ try {
     </section>
     <!-- about-area-end -->
 
-    <!-- services-area -->
-    <section class="services">
-        <div class="container">
-            <div class="services__title__wrap">
-                <div class="row align-items-center justify-content-between">
-                    <div class="col-xl-5 col-lg-6 col-md-8">
-                        <div class="section__title">
-                            <span class="sub-title">02 - my Services</span>
-                            <h2 class="title">Creates amazing digital experiences</h2>
+    <!-- لازم المستخدم يكون مسجل و لازم يكون علي الاقل معاه خدمه واحده او اكتر -->
+    <?php if ($user_bool && $q_service->num_rows > 0) : ?>
+        <!-- services-area -->
+        <section class="services">
+            <div class="container">
+                <div class="services__title__wrap">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-xl-5 col-lg-6 col-md-8">
+                            <div class="section__title">
+                                <span class="sub-title">02 - my Services</span>
+                                <h2 class="title">Creates amazing digital experiences</h2>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lg-6 col-md-4">
+                            <div class="services__arrow"></div>
                         </div>
                     </div>
-                    <div class="col-xl-5 col-lg-6 col-md-4">
-                        <div class="services__arrow"></div>
-                    </div>
+                </div>
+                <div class="row gx-0 services__active">
+                    <?php while ($service = mysqli_fetch_assoc($q_service)) : ?>
+                        <div class="col-xl-3">
+                            <div class="services__item">
+                                <div class="services__thumb">
+                                    <a href="services-details.php"><img src="files_users/<?= $user['email'] . '/services/' . $service['image'] ?>" alt="service_image"></a>
+                                </div>
+                                <div class="services__content">
+                                    <div class="services__icon">
+                                        <img class="light" src="assets/img/icons/services_light_icon01.png" alt="">
+                                        <img class="dark" src="assets/img/icons/services_icon01.png" alt="">
+                                    </div>
+                                    <h3 class="title"><a href="services-details.php"><?= $service['service_name'] ?></a></h3>
+                                    <p><?= $service['description'] ?></p>
+                                    <p><?= $service['list'] ?></p>
+                                    <!-- <ul class="services__list">
+                                    <li>Research & Data</li>
+                                    <li>Branding & Positioning</li>
+                                    <li>Business Consulting</li>
+                                    <li>Go To Market</li>
+                                </ul> -->
+                                    <a href="services-details.php" class="btn border-btn">Read more</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
                 </div>
             </div>
-            <div class="row gx-0 services__active">
-                <div class="col-xl-3">
-                    <div class="services__item">
-                        <div class="services__thumb">
-                            <a href="services-details.php"><img src="assets/img/images/services_img01.jpg" alt=""></a>
-                        </div>
-                        <div class="services__content">
-                            <div class="services__icon">
-                                <img class="light" src="assets/img/icons/services_light_icon01.png" alt="">
-                                <img class="dark" src="assets/img/icons/services_icon01.png" alt="">
-                            </div>
-                            <h3 class="title"><a href="services-details.php">Business Strategy</a></h3>
-                            <p>Strategy is a forward-looking plan for your brand’s behavior. Strategy is a forward-looking plan.</p>
-                            <ul class="services__list">
-                                <li>Research & Data</li>
-                                <li>Branding & Positioning</li>
-                                <li>Business Consulting</li>
-                                <li>Go To Market</li>
-                            </ul>
-                            <a href="services-details.php" class="btn border-btn">Read more</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="services__item">
-                        <div class="services__thumb">
-                            <a href="services-details.php"><img src="assets/img/images/services_img02.jpg" alt=""></a>
-                        </div>
-                        <div class="services__content">
-                            <div class="services__icon">
-                                <img class="light" src="assets/img/icons/services_light_icon02.png" alt="">
-                                <img class="dark" src="assets/img/icons/services_icon02.png" alt="">
-                            </div>
-                            <h3 class="title"><a href="services-details.php">Brand Strategy</a></h3>
-                            <p>Strategy is a forward-looking plan for your brand’s behavior. Strategy is a forward-looking plan.</p>
-                            <ul class="services__list">
-                                <li>User Research & Testing</li>
-                                <li>UX Design</li>
-                                <li>Visual Design</li>
-                                <li>Information Architecture</li>
-                            </ul>
-                            <a href="services-details.php" class="btn border-btn">Read more</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="services__item">
-                        <div class="services__thumb">
-                            <a href="services-details.php"><img src="assets/img/images/services_img03.jpg" alt=""></a>
-                        </div>
-                        <div class="services__content">
-                            <div class="services__icon">
-                                <img class="light" src="assets/img/icons/services_light_icon03.png" alt="">
-                                <img class="dark" src="assets/img/icons/services_icon03.png" alt="">
-                            </div>
-                            <h3 class="title"><a href="services-details.php">Product Design</a></h3>
-                            <p>Strategy is a forward-looking plan for your brand’s behavior. Strategy is a forward-looking plan.</p>
-                            <ul class="services__list">
-                                <li>User Research & Testing</li>
-                                <li>UX Design</li>
-                                <li>Visual Design</li>
-                                <li>Information Architecture</li>
-                            </ul>
-                            <a href="services-details.php" class="btn border-btn">Read more</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="services__item">
-                        <div class="services__thumb">
-                            <a href="services-details.php"><img src="assets/img/images/services_img04.jpg" alt=""></a>
-                        </div>
-                        <div class="services__content">
-                            <div class="services__icon">
-                                <img class="light" src="assets/img/icons/services_light_icon04.png" alt="">
-                                <img class="dark" src="assets/img/icons/services_icon04.png" alt="">
-                            </div>
-                            <h3 class="title"><a href="services-details.php">Visual Design</a></h3>
-                            <p>Strategy is a forward-looking plan for your brand’s behavior. Strategy is a forward-looking plan.</p>
-                            <ul class="services__list">
-                                <li>User Research & Testing</li>
-                                <li>UX Design</li>
-                                <li>Visual Design</li>
-                                <li>Information Architecture</li>
-                            </ul>
-                            <a href="services-details.php" class="btn border-btn">Read more</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="services__item">
-                        <div class="services__thumb">
-                            <a href="services-details.php"><img src="assets/img/images/services_img03.jpg" alt=""></a>
-                        </div>
-                        <div class="services__content">
-                            <div class="services__icon">
-                                <img class="light" src="assets/img/icons/services_light_icon02.png" alt="">
-                                <img class="dark" src="assets/img/icons/services_icon02.png" alt="">
-                            </div>
-                            <h3 class="title"><a href="services-details.php">Web Development</a></h3>
-                            <p>Strategy is a forward-looking plan for your brand’s behavior. Strategy is a forward-looking plan.</p>
-                            <ul class="services__list">
-                                <li>User Research & Testing</li>
-                                <li>UX Design</li>
-                                <li>Visual Design</li>
-                                <li>Information Architecture</li>
-                            </ul>
-                            <a href="services-details.php" class="btn border-btn">Read more</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- services-area-end -->
-
+        </section>
+        <!-- services-area-end -->
+    <?php endif; ?>
     <!-- work-process-area -->
     <section class="work__process">
         <div class="container">

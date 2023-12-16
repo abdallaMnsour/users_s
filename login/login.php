@@ -1,8 +1,9 @@
 <?php
 if (isset($_GET['no_user'])) {
+	$email_bool = true;
 	$email = $_GET['no_user'];
 } else {
-	$email = '';
+	$email_bool = false;
 }
 ?>
 <!DOCTYPE html>
@@ -30,7 +31,7 @@ if (isset($_GET['no_user'])) {
 						Login into account
 					</h4>
 					<form action="../functions/users/login.php" method="post">
-						<?php if (isset($_GET['no_user'])) : ?>
+						<?php if ($email_bool) : ?>
 							<div class="alert alert-danger">email or password is wrong please try again</div>
 						<?php endif; ?>
 						<div class="form-input">
@@ -44,7 +45,7 @@ if (isset($_GET['no_user'])) {
 
 						<div class="mb-3 d-flex align-items-center">
 							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="cb1">
+								<input type="checkbox" class="custom-control-input" id="cb1" name="remember" value="yes">
 								<label class="custom-control-label" for="cb1">Remember me</label>
 							</div>
 						</div>

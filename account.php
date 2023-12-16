@@ -17,8 +17,49 @@ if (isset($_SESSION['skill_name'])) {
   $name_skill = '';
 }
 ?>
+<style>
+  section.account {
+    max-width: 400px;
+    margin: 150px auto 0;
+  }
+
+  section.account div img {
+    width: 120px;
+    height: 120px;
+    box-shadow: 3px 2px 8px 4px #c3c3c3;
+  }
+
+  hr:not([size]) {
+    height: 2px;
+    background: #898989;
+  }
+</style>
 <main>
-  <section class="banner">
+  <section class="account">
+    <div>
+      <?php if ($user['image'] != 'default.png') : ?>
+        <img src="files_users/<?= $user['email'] . '/user_image/' . $user['image'] ?>" />
+      <?php else : ?>
+        <img src="img/users/default.png" />
+      <?php endif; ?>
+    </div>
+    <hr>
+    <div>
+      <p><b>Name :</b> <?= $user['username'] ?></p>
+      <p><b>Email :</b> <?= $user['email'] ?></p>
+      <p><b>Address 1 :</b> <?= $user['address_1'] ?></p>
+      <p><b>Address 2 :</b> <?= $user['address_2'] ?></p>
+      <p><b>Gender :</b> <?= $user['gender'] == 0 ? 'male' : 'female' ?></p>
+      <p><b>Country :</b> <?= $user['country'] ?></p>
+      <p><b>County :</b> <?= $user['county'] ?></p>
+      <p><b>City :</b> <?= $user['city'] ?></p>
+    </div>
+    <hr>
+    <div>
+      <a class="btn btn-primary" href="update_account.php">Edit you'r account</a>
+    </div>
+  </section>
+  <section class="banner pt-0">
     <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
 
@@ -43,7 +84,7 @@ if (isset($_SESSION['skill_name'])) {
         <input type="range" name="range" class="form-range" min="0" max="100" id="customRange2" onclick="updateValue(this)">
       </div> -->
 
-      <input class="btn btn-primary" type="submit" value="submit" />
+      <button class="btn btn-primary" type="submit">add skill</button>
 
     </form>
     <form id="form_cv" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
@@ -64,9 +105,12 @@ if (isset($_SESSION['skill_name'])) {
         <input type="range" name="range" class="form-range" min="0" max="100" id="customRange2" onclick="updateValue(this)">
       </div> -->
 
-      <input class="btn btn-primary" type="submit" value="new cv" />
+      <button class="btn btn-primary" type="submit">new cv</button>
 
     </form>
+  </section>
+  <section class="account mb-5 text-center">
+    <a href="management_services.php" class="btn btn-primary">edit services</a>
   </section>
 </main>
 <script>
