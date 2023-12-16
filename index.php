@@ -1106,6 +1106,11 @@ if ($user_bool) {
                     input_phone.value = '';
                     input_message.value = '';
 
+                    name_input_error.innerHTML = '';
+                    email_input_error.innerHTML = '';
+                    phone_input_error.innerHTML = '';
+                    message_input_error.innerHTML = '';
+
                     status_submit.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>success</strong><br>${data.success}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

@@ -61,7 +61,7 @@ try {
             <th><?= $service['description'] ?></th>
             <th><?= $service['list'] ?></th>
             <th>
-              <a href="functions/users/services/update_service.php" class="btn d-block mb-1">update</a>
+              <a href="functions/users/services/update_service.php?id=<?= $service['id'] ?>" class="btn d-block mb-1">update</a>
 
               <!-- Button trigger modal -->
               <button onclick="delete_service(<?= $service['id'] ?>)" type="button" class="btn bg-danger d-block w-100 p-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
