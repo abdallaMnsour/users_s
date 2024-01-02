@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     function clear($value)
     {
       $value = htmlspecialchars($value);
+      $value = addslashes($value);
       $value = trim($value);
       return $value;
     }
@@ -222,6 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       mkdir('../../files_users/' . $email . '/skills');
       mkdir('../../files_users/' . $email . '/cv');
       mkdir('../../files_users/' . $email . '/user_image');
+      mkdir('../../files_users/' . $email . '/work');
 
       if ($image_bool) {
         move_uploaded_file($image_tmp, '../../files_users/' . $email . '/user_image/' . $image);

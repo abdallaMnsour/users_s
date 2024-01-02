@@ -8,7 +8,11 @@
                         <div class="footer__widget">
                             <div class="fw-title">
                                 <h5 class="sub-title">Contact us</h5>
-                                <h4 class="title">+81383 766 284</h4>
+                                <?php if ($user_bool) : ?>
+                                    <h4 class="title"><?= $user['phone'] ?></h4>
+                                <?php else: ?>
+                                    <h4 class="title">+81383 766 284</h4>
+                                <?php endif; ?>
                             </div>
                             <div class="footer__widget__text">
                                 <p>There are many variations of passages of lorem ipsum
@@ -21,11 +25,17 @@
                         <div class="footer__widget">
                             <div class="fw-title">
                                 <h5 class="sub-title">my address</h5>
-                                <h4 class="title">AUSTRALIA</h4>
+                                <?php if ($user_bool) : ?>
+                                    <h4 class="title"><?= $user['country'] ?></h4>
+                                <?php else: ?>
+                                    <h4 class="title">AUSTRALIA</h4>
+                                <?php endif; ?>
                             </div>
                             <div class="footer__widget__address">
                                 <p>Level 13, 2 Elizabeth Steereyt set <br> Melbourne, Victoria 3000</p>
-                                <a href="mailto:noreply@envato.com" class="mail">noreply@envato.com</a>
+                                <?php if ($user_bool) : ?>
+                                    <a href="mailto:<?= $user['email'] ?>" class="mail"><?= $user['email'] ?></a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

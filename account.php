@@ -60,8 +60,9 @@ if (isset($_SESSION['skill_name'])) {
     </div>
   </section>
   <section class="banner pt-0">
-    <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
+    <form id="form_skill" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
+      <h2>ADD SKILL</h2>
 
       <span id="skill_status"></span>
 
@@ -87,8 +88,10 @@ if (isset($_SESSION['skill_name'])) {
       <button class="btn btn-primary" type="submit">add skill</button>
 
     </form>
+
     <form id="form_cv" action="functions/users/add_skill.php" method="post" class="p-5 m-auto" style="max-width: 500px;" enctype="multipart/form-data">
 
+      <h2>ADD CV</h2>
 
       <span id="cv_status"></span>
 
@@ -109,8 +112,9 @@ if (isset($_SESSION['skill_name'])) {
 
     </form>
   </section>
-  <section class="account mb-5 text-center">
-    <a href="management_services.php" class="btn btn-primary">edit services</a>
+  <section class="account mb-5">
+      <a href="management.php?manage=services" class="btn btn-primary d-block mb-3">edit services</a>
+      <a href="management.php?manage=work" class="btn btn-primary d-block mb-3">edit works</a>
   </section>
 </main>
 <script>
