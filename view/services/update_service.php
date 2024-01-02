@@ -1,21 +1,14 @@
 <?php
-ob_start();
-session_start();
-if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
-  header('location: ../../../');
-  exit;
-} else {
-  require_once '../../connect.php';
-  $id = $_GET['id'];
-  $query = "SELECT * FROM services WHERE id = '$id'";
-  $query = mysqli_query($conn, $query);
 
-  $service = mysqli_fetch_assoc($query);
+$id = $_GET['id'];
+$query = "SELECT * FROM services WHERE id = '$id'";
+$query = mysqli_query($conn, $query);
 
-}
+$service = mysqli_fetch_assoc($query);
+
 ?>
 
-<link rel="shortcut icon" type="image/x-icon" href="../../../assets/img/favicon.png">
+<link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.png">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <style>
   body {
@@ -23,7 +16,7 @@ if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
   }
 </style>
 <div style="max-width: 500px;margin: 150px auto 0">
-  <form id="form">
+  <form id="form" class="pb-3">
 
     <div id="status_submit"></div>
 
@@ -53,7 +46,7 @@ if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
 
 
     <button type="submit" class="btn btn-primary">Submit</button>
-    <a href="../../../management_services.php" class="btn btn-secondary">Go back</a>
+    <a href="?manage=services" class="btn btn-secondary">Go back</a>
 
   </form>
 </div>
@@ -77,6 +70,8 @@ if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
   form.onsubmit = function(e) {
     e.preventDefault();
 
+    $_FILES['image']['tmp_name']
+
     let data = new FormData();
     data.append('image', image.files[0]);
     data.append('name_service', name.value);
@@ -85,7 +80,7 @@ if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
     data.append('id', <?= $_GET['id'] ?>);
 
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'update.php');
+    xhr.open('POST', 'functions/users/services/update.php');
     xhr.send(data);
     xhr.onload = function() {
       name_input_error.innerHTML = '';
@@ -155,6 +150,4 @@ if (!isset($_SESSION['user_login']) || !isset($_GET['id'])) {
     }
   }
 </script>
-<?php
 
-ob_end_flush();

@@ -1,5 +1,21 @@
 <?php
+ob_start();
 include 'includes/header.php';
+
+if (!$user_bool || !isset($_GET['work_id']) || $_GET['work_id'] == '') {
+    header('location: index.php');
+    exit;
+} else {
+    $query = "SELECT * FROM work WHERE id = '{$_GET['work_id']}'";
+    $query = mysqli_query($conn, $query);
+    if (mysqli_num_rows($query) != 1) {
+        header('location: index.php');
+        exit;
+    } else {
+        $work = mysqli_fetch_assoc($query);
+    }
+}
+
 ?>
 <!-- main-area -->
 <main>
@@ -33,46 +49,42 @@ include 'includes/header.php';
         </div>
     </section>
     <!-- breadcrumb-area-end -->
+<?php
 
+?>
     <!-- portfolio-details-area -->
     <section class="services__details">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="services__details__thumb">
-                        <img src="assets/img/images/services_details01.jpg" alt="">
+                        <img src="files_users/<?= $user['email'] ?>/work/<?= $work['image'] ?>" alt="">
                     </div>
                     <div class="services__details__content">
-                        <h2 class="title">Rixelda - 24 hours Control room landing page</h2>
-                        <p>Definition: Business strategy can be understood as the course of action or set of decisions which assist the
-                            entrepreneurs in achieving specific business objectives.</p>
-                        <p>It is nothing but a master plan that the management of a company implements to secure a competitive position in the market, carry on its operations, please customers and achieve the desired ends of the business.</p>
-                        <p>In business, it is the long-range sketch of the desired image, direction and destination of the organization. It is a scheme of corporate intent and action, which is carefully planned and flexibly designed with the purpose of</p>
-                        <ul class="services__details__list">
-                            <li>Achieving effectiveness,</li>
-                            <li>Perceiving and utilizing opportunities,</li>
-                            <li>Mobilising resources,</li>
-                            <li>Securing an advantageous position,</li>
-                            <li>Meeting challenges and threats,</li>
-                            <li>Directing efforts and behaviour and</li>
-                            <li>Gaining command over the situation.</li>
-                        </ul>
-                        <p>A business strategy is a set of competitive moves and actions that a business uses to attract customers, compete
-                            successfully, strengthening performance, and achieve organizational goals. It outlines how business should be carried
-                            out to reach the desired ends</p>
-                        <div class="services__details__img">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <img src="assets/img/images/services_details02.jpg" alt="">
-                                </div>
-                                <div class="col-sm-6">
-                                    <img src="assets/img/images/services_details03.jpg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="small-title">Nature of Business Strategy</h2>
-                        <p>A business strategy is a combination of proactive actions on the part of management, for the purpose of enhancing the company’s market position and overall performance and reactions to unexpected developments and new market.</p>
-                        <p>The maximum part of the company’s present strategy is a result of formerly initiated actions and business approaches, but when market conditions take an unanticipated turn, the company requires a strategic reaction to cope with contingencies. Hence, for unforeseen development, a part of the business strategy is formulated as a reasoned response nature of business strategy.</p>
+                        <h2 class="title"><?= $work['title'] ?></h2>
+                        <p><?= $work['description'] ?></p>
+<!--                        <ul class="services__details__list">-->
+<!--                            <li>Achieving effectiveness,</li>-->
+<!--                            <li>Perceiving and utilizing opportunities,</li>-->
+<!--                            <li>Mobilising resources,</li>-->
+<!--                            <li>Securing an advantageous position,</li>-->
+<!--                            <li>Meeting challenges and threats,</li>-->
+<!--                            <li>Directing efforts and behaviour and</li>-->
+<!--                            <li>Gaining command over the situation.</li>-->
+<!--                        </ul>-->
+<!--                        <div class="services__details__img">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-sm-6">-->
+<!--                                    <img src="assets/img/images/services_details02.jpg" alt="">-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-6">-->
+<!--                                    <img src="assets/img/images/services_details03.jpg" alt="">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <h2 class="small-title">Nature of Business Strategy</h2>-->
+<!--                        <p>A business strategy is a combination of proactive actions on the part of management, for the purpose of enhancing the company’s market position and overall performance and reactions to unexpected developments and new market.</p>-->
+<!--                        <p>The maximum part of the company’s present strategy is a result of formerly initiated actions and business approaches, but when market conditions take an unanticipated turn, the company requires a strategic reaction to cope with contingencies. Hence, for unforeseen development, a part of the business strategy is formulated as a reasoned response nature of business strategy.</p>-->
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -89,32 +101,33 @@ include 'includes/header.php';
                         <div class="widget">
                             <h5 class="title">Project Information</h5>
                             <ul class="sidebar__contact__info">
-                                <li><span>Date :</span> January, 2021</li>
-                                <li><span>Location :</span> East Meadow NY 11554</li>
-                                <li><span>Client :</span> American</li>
+                                <li><span>Date :</span> <?= $work['date'] ?></li>
+                                <li><span>Location :</span> <?= $work['location'] ?></li>
+                                <li><span>Client :</span> <?= $work['client_name'] ?></li>
                                 <li class="cagegory"><span>Category :</span>
                                     <a href="portfolio.php">Photo,</a>
                                     <a href="portfolio.php">UI/UX</a>
                                 </li>
-                                <li><span>Project Link :</span> <a href="portfolio-details.php">https://www.yournews.com/</a></li>
+                                <li><span>Project Link :</span> <a href="<?= $work['project_link'] ?>"><?= $work['project_link'] ?></a></li>
                             </ul>
                         </div>
                         <div class="widget">
                             <h5 class="title">Contact Information</h5>
                             <ul class="sidebar__contact__info">
-                                <li><span>Address :</span> 8638 Amarica Stranfod, <br> Mailbon Star</li>
-                                <li><span>Mail :</span> yourmail@gmail.com</li>
-                                <li><span>Phone :</span> +7464 0187 3535 645</li>
-                                <li><span>Fax id :</span> +9 659459 49594</li>
+                                <li><span>City :</span> <?= $user['city'] ?> </li>
+                                <li><span>Address :</span> <?= $user['address_1'] ?> </li>
+                                <?= $user['address_2'] == '' ?: '<li><span>Address 2 :</span> ' . $user['address_2'] . '</li>' ?>
+                                <li><span>Mail :</span> <?= $user['email'] ?></li>
+                                <li><span>Phone :</span> <?= $user['phone'] ?></li>
                             </ul>
-                            <ul class="sidebar__contact__social">
-                                <li><a href="#"><i class="fab fa-dribbble"></i></a></li>
-                                <li><a href="#"><i class="fab fa-behance"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest"></i></a></li>
-                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                            </ul>
+<!--                            <ul class="sidebar__contact__social">-->
+<!--                                <li><a href="#"><i class="fab fa-dribbble"></i></a></li>-->
+<!--                                <li><a href="#"><i class="fab fa-behance"></i></a></li>-->
+<!--                                <li><a href="#"><i class="fab fa-linkedin"></i></a></li>-->
+<!--                                <li><a href="#"><i class="fab fa-pinterest"></i></a></li>-->
+<!--                                <li><a href="#"><i class="fab fa-facebook"></i></a></li>-->
+<!--                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>-->
+<!--                            </ul>-->
                         </div>
                     </aside>
                 </div>
@@ -162,4 +175,4 @@ include 'includes/header.php';
 
 <?php
 include 'includes/footer.php';
-?>
+ob_end_flush();

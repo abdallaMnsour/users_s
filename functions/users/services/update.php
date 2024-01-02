@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_login'])) {
       $image_size = $_FILES['image']['size'];
   
       if ($image_error == 0) {
-        if ($image_size < 2 * 1024 * 1024) {
+        if ($image_size < (2 * 1024 * 1024)) {
           $ext = ['jpg', 'png', 'jpeg'];
           $type = explode('.', $image_name);
           $type = strtolower(end($type));

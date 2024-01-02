@@ -1,6 +1,5 @@
 <?php
 ob_start();
-include 'includes/header.php';
 if (!$user_bool) {
   header('location: index.php');
   exit;
@@ -22,7 +21,7 @@ try {
 </style>
 <main>
   <section class="banner m-5">
-    <form id="form" action="functions/users/services/add_service.php" method="post" enctype="multipart/form-data">
+    <form id="form" method="post" enctype="multipart/form-data">
 
       <div id="service_status"></div>
 
@@ -57,7 +56,7 @@ try {
 
       <div class="d-flex justify-content-between">
         <button type="submit" class="btn btn-primary">Add service</button>
-        <a href="management_services.php" class="btn bg-secondary">back</a>
+        <a href="?manage=services" class="btn bg-secondary">back</a>
       </div>
     </form>
 
@@ -163,6 +162,5 @@ try {
   })
 </script>
 <?php
-include 'includes/footer.php';
 ob_end_flush();
 ?>
