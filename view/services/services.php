@@ -1,8 +1,8 @@
 <?php
 
-if (!isset($_SESSION['user_login'])) {
-    header('location: ../');
-    exit;
+if (!isset($page_bool)) {
+  header('location: ../');
+  exit;
 }
 
 $query = "SELECT * FROM services WHERE user_id = '{$user['id']}'";

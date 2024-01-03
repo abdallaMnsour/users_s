@@ -1,9 +1,10 @@
 <?php
 ob_start();
-if (!$user_bool) {
-  header('location: index.php');
+
+if (!isset($page_bool)) {
+  header('location: ../');
   exit;
-}
+};
 
 $query = 'SELECT * FROM services';
 
