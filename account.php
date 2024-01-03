@@ -114,7 +114,7 @@ if (isset($_SESSION['skill_name'])) {
   </section>
   <section class="account mb-5">
       <a href="management.php?manage=services" class="btn btn-primary d-block mb-3">edit services</a>
-      <a href="management.php?manage=work" class="btn btn-primary d-block mb-3">edit works</a>
+      <a href="management.php?manage=works" class="btn btn-primary d-block mb-3">edit works</a>
   </section>
 </main>
 <script>

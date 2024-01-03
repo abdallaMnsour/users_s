@@ -1,5 +1,10 @@
 <?php
 
+if (!isset($page_bool)) {
+  header('location: ../');
+  exit;
+}
+
 $id = $_GET['id'];
 $query = "SELECT * FROM services WHERE id = '$id'";
 $query = mysqli_query($conn, $query);
@@ -69,8 +74,6 @@ $service = mysqli_fetch_assoc($query);
   let log = console.log;
   form.onsubmit = function(e) {
     e.preventDefault();
-
-    $_FILES['image']['tmp_name']
 
     let data = new FormData();
     data.append('image', image.files[0]);

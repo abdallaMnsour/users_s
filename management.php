@@ -3,6 +3,14 @@ ob_start();
 
 include 'includes/header.php';
 
+if (!$user_bool) {
+    header('location: index.php');
+    exit;
+}
+
+// استخدمها في الصقحات الاخري لمعرفه ان كان دخوله شرعيا ام لا
+$page_bool = true;
+
 
 /*
     قم باستدعاء الملفات من ملف ال view بدلا من ان تكون الملفات موجوده بالخارج
@@ -24,17 +32,19 @@ if ($user_bool && isset($_GET['manage'])) {
         } else {
             include 'view/services/services.php';
         }
-    /* work */
-    } else if ($_GET['manage'] == 'work') {
+    /* works */
+    } else if ($_GET['manage'] == 'works') {
         if (isset($_GET['status'])) {
             if ($_GET['status'] == 'add') {
-                include 'view/services/add_service.php';
+                include 'view/works/add_work.php';
             } else if ($_GET['status'] == 'update' && isset($_GET['id'])) {
-                include 'view/services/update_service.php';
+                include 'view/works/update_work.php';
             }
         } else {
-            include 'view/work/work.php';
+            include 'view/works/work.php';
         }
+    } else {
+        echo '<b>error : </b>you have an error';
     }
 
 } else {
