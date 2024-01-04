@@ -1,7 +1,8 @@
 <?php
 
+// في حاله كان دخوله غير قانوني
 if (!isset($page_bool)) {
-  header('location: ../');
+  header('location: index.php');
   exit;
 }
 

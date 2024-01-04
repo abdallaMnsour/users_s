@@ -1,7 +1,8 @@
 <?php
 
+// في حاله كان دخوله غير قانوني
 if (!isset($page_bool)) {
-  header('location: ../');
+  header('location: index.php');
   exit;
 }
 
@@ -11,7 +12,7 @@ $query = mysqli_query($conn, $query);
 
 // اذا كان رقم ال id لا يساوي 1 فهذا يعني انه تم الدخول بطريقه غير شرعيه
 if (mysqli_num_rows($query) != 1) {
-  header('location: ../');
+  header('location: index.php');
   exit;
 }
 

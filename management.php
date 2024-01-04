@@ -44,7 +44,8 @@ if ($user_bool && isset($_GET['manage'])) {
             include 'view/works/work.php';
         }
     } else {
-        echo '<b>error : </b>you have an error';
+        header('location: index.php');
+        exit;
     }
 
 } else {
